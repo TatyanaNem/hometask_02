@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Blog } from "../../types/blog";
 import { blogsRepository } from "../../../repositories/blogs-repository";
+import { HttpStatus } from "../../../core/types/http-statuses";
 
 export const getBlogHandler = (
   req: Request<{ blogId: string }>,
@@ -9,9 +10,9 @@ export const getBlogHandler = (
   const blog = blogsRepository.getBlogById(req.params.blogId);
 
   if (!blog) {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatus.NotFound);
     return;
   }
 
-  res.status(200).send(blog);
+  res.status(HttpStatus.Ok).send(blog);
 };

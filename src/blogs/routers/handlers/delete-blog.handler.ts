@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { blogsRepository } from "../../../repositories/blogs-repository";
+import { HttpStatus } from "../../../core/types/http-statuses";
 
 export const deleteBlogHandler = (
   req: Request<{ blogId: string }>,
@@ -7,10 +8,10 @@ export const deleteBlogHandler = (
 ) => {
   const blog = blogsRepository.getBlogById(req.params.blogId);
   if (!blog) {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatus.NotFound);
     return;
   }
 
   blogsRepository.deleteBlog(req.params.blogId);
-  res.sendStatus(204);
+  res.sendStatus(HttpStatus.NoContent);
 };
