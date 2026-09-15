@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import { inMemoryDB } from "../../../db/in-memory.db";
-import { Blog } from "../../types/blog";
+import { blogsRepository } from "../../../repositories/blogs-repository";
+import { BlogInputDto } from "../../dto/blog.input.dto";
 
-export const updateBlogHandler = (req: Request, res: Response) => {
-  inMemoryDB.blogs = inMemoryDB.blogs.map((blog: Blog) => {
-    if (blog.id === +req.params.blogId) {
-      return {
-        ...blog,
-        ...req.body,
-      };
-    }
-    return blog;
-  });
+export const updateBlogHandler = (
+  req: Request<{ blogId: string }, {}, BlogInputDto>,
+  res: Response,
+) => {
+  const blog = blogsRepository.getBlogById(req.params.blogId);
+  if (!blog) {
+    res.sendStatus(404);
+    return;
+  }
 
+  blogsRepository.updateBlog(req.body, req.params.blogId);
   res.sendStatus(204);
 };

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { inMemoryDB } from "../../../db/in-memory.db";
 import { Blog } from "../../types/blog";
+import { blogsRepository } from "../../../repositories/blogs-repository";
 
 export const getBlogsListHandler = (req: Request, res: Response<Blog[]>) => {
-  res.status(200).send(inMemoryDB.blogs);
+  res.status(200).send(blogsRepository.getAllBlogs());
 };

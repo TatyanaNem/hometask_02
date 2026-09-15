@@ -1,13 +1,16 @@
 import { Response, Request } from "express";
-import { inMemoryDB } from "../../../db/in-memory.db";
+import { blogsRepository } from "../../../repositories/blogs-repository";
 
-export const deleteBlogHandler = (req: Request, res: Response) => {
-  const blog = inMemoryDB.blogs.filter((b) => b.id !== +req.params.id);
-
+export const deleteBlogHandler = (
+  req: Request<{ blogId: string }>,
+  res: Response,
+) => {
+  const blog = blogsRepository.getBlogById(req.params.blogId);
   if (!blog) {
     res.sendStatus(404);
     return;
   }
 
+  blogsRepository.deleteBlog(req.params.blogId);
   res.sendStatus(204);
 };

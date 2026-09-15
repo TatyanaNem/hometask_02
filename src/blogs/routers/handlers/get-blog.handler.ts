@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import { Blog } from "../../types/blog";
-import { inMemoryDB } from "../../../db/in-memory.db";
+import { blogsRepository } from "../../../repositories/blogs-repository";
 
-export const getBlogHandler = (req: Request, res: Response<Blog>) => {
-  const blog = inMemoryDB.blogs.find((b) => b.id === +req.params.blogId);
+export const getBlogHandler = (
+  req: Request<{ blogId: string }>,
+  res: Response<Blog>,
+) => {
+  const blog = blogsRepository.getBlogById(req.params.blogId);
 
   if (!blog) {
     res.sendStatus(404);
