@@ -8,6 +8,7 @@ import { createBlogHandler } from "./handlers/create-blog-handler";
 import { blogInputDtoValidation } from "../validation/blog.input-dto.validation-middlewares";
 import { idValidation } from "../../core/middlewares/validation/params-id.validation.middleware";
 import { blogInputValidationResultMiddleware } from "../../core/middlewares/input-validation-result.middleware";
+import { authGuardMiddleware } from "../../auth/middlewares/auth-guard.middleware";
 
 export const blogsRouter = Router({ mergeParams: true });
 
@@ -22,6 +23,7 @@ blogsRouter.get(
 
 blogsRouter.post(
   BLOGS_ROUTES.ROOT,
+  authGuardMiddleware,
   blogInputDtoValidation,
   blogInputValidationResultMiddleware,
   createBlogHandler,
@@ -29,6 +31,7 @@ blogsRouter.post(
 
 blogsRouter.put(
   BLOGS_ROUTES.BY_ID,
+  authGuardMiddleware,
   idValidation("blogId"),
   blogInputDtoValidation,
   blogInputValidationResultMiddleware,
@@ -37,6 +40,7 @@ blogsRouter.put(
 
 blogsRouter.delete(
   BLOGS_ROUTES.BY_ID,
+  authGuardMiddleware,
   idValidation("blogId"),
   blogInputValidationResultMiddleware,
   deleteBlogHandler,

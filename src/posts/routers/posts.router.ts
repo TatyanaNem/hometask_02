@@ -6,8 +6,9 @@ import { updatePostHandler } from "./handlers/update-post.handler";
 import { deletePostHandler } from "./handlers/delete-post.handler";
 import { createPostHandler } from "./handlers/create-post-handler";
 import { postInputDtoValidation } from "../validation/post.input-dto.validation-middlewares";
-import { idValidation } from "../../core/types/middlewares/validation/params-id.validation.middleware";
-import { blogInputValidationResultMiddleware } from "../../core/types/middlewares/input-validation-result.middleware";
+import { idValidation } from "../../core/middlewares/validation/params-id.validation.middleware";
+import { blogInputValidationResultMiddleware } from "../../core/middlewares/input-validation-result.middleware";
+import { authGuardMiddleware } from "../../auth/middlewares/auth-guard.middleware";
 
 export const postsRouter = Router({ mergeParams: true });
 
@@ -22,6 +23,7 @@ postsRouter.get(
 
 postsRouter.post(
   POSTS_ROUTES.ROOT,
+  authGuardMiddleware,
   postInputDtoValidation,
   blogInputValidationResultMiddleware,
   createPostHandler,
@@ -29,6 +31,7 @@ postsRouter.post(
 
 postsRouter.put(
   POSTS_ROUTES.BY_ID,
+  authGuardMiddleware,
   idValidation("postId"),
   postInputDtoValidation,
   blogInputValidationResultMiddleware,
@@ -37,6 +40,7 @@ postsRouter.put(
 
 postsRouter.delete(
   POSTS_ROUTES.BY_ID,
+  authGuardMiddleware,
   idValidation("postId"),
   blogInputValidationResultMiddleware,
   deletePostHandler,
