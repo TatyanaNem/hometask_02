@@ -13,9 +13,9 @@ export const authGuardMiddleware = (
     return;
   }
 
-  const token = authHeader.split(" ")[1];
+  const [scheme, token] = authHeader.split(" ");
 
-  if (!token) {
+  if (scheme !== "Basic" || !token) {
     res.status(401).send("Unauthorized");
     return;
   }
