@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { blogsRepository } from "../../../repositories/blogs-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
-import { createErrorMessages } from "../../../middlewares/input-validation-result.middleware";
+import { createErrorMessages } from "../../../core/middlewares/input-validation-result.middleware";
 
 export const deleteBlogHandler = (
   req: Request<{ blogId: string }>,

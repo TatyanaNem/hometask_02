@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { ValidationError, validationResult } from "express-validator";
-import { HttpStatus } from "../core/types/http-statuses";
+import { HttpStatus } from "../../core/types/http-statuses";
 import {
   ValidationErrorDto,
   ValidationErrorType,
-} from "../core/types/validation-error";
+} from "../types/validation-error";
 
 export const createErrorMessages = (
   errors: ValidationErrorType[],

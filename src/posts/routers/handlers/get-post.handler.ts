@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Post } from "../../types/post";
 import { postsRepository } from "../../../repositories/posts-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
-import { createErrorMessages } from "../../../middlewares/input-validation-result.middleware";
+import { createErrorMessages } from "../../../core/types/middlewares/input-validation-result.middleware";
 import { ValidationErrorDto } from "../../../core/types/validation-error";
 
 export const getPostHandler = (

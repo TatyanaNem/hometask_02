@@ -6,8 +6,8 @@ import { updateBlogHandler } from "./handlers/update-blog.handler";
 import { deleteBlogHandler } from "./handlers/delete-blog.handler";
 import { createBlogHandler } from "./handlers/create-blog-handler";
 import { blogInputDtoValidation } from "../validation/blog.input-dto.validation-middlewares";
-import { idValidation } from "../../middlewares/validation/params-id.validation.middleware";
-import { blogInputValidationResultMiddleware } from "../../middlewares/input-validation-result.middleware";
+import { idValidation } from "../../core/middlewares/validation/params-id.validation.middleware";
+import { blogInputValidationResultMiddleware } from "../../core/middlewares/input-validation-result.middleware";
 
 export const blogsRouter = Router({ mergeParams: true });
 

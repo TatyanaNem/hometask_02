@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { postsRepository } from "../../../repositories/posts-repository";
 import { PostInputDto } from "../../dto/post.input.dto";
 import { HttpStatus } from "../../../core/types/http-statuses";
-import { createErrorMessages } from "../../../middlewares/input-validation-result.middleware";
+import { createErrorMessages } from "../../../core/types/middlewares/input-validation-result.middleware";
 
 export const updatePostHandler = (
   req: Request<{ postId: string }, {}, PostInputDto>,

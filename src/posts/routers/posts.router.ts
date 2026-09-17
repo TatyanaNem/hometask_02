@@ -6,8 +6,8 @@ import { updatePostHandler } from "./handlers/update-post.handler";
 import { deletePostHandler } from "./handlers/delete-post.handler";
 import { createPostHandler } from "./handlers/create-post-handler";
 import { postInputDtoValidation } from "../validation/post.input-dto.validation-middlewares";
-import { idValidation } from "../../middlewares/validation/params-id.validation.middleware";
-import { blogInputValidationResultMiddleware } from "../../middlewares/input-validation-result.middleware";
+import { idValidation } from "../../core/types/middlewares/validation/params-id.validation.middleware";
+import { blogInputValidationResultMiddleware } from "../../core/types/middlewares/input-validation-result.middleware";
 
 export const postsRouter = Router({ mergeParams: true });
 
