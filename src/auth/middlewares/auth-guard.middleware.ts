@@ -15,6 +15,11 @@ export const authGuardMiddleware = (
 
   const token = authHeader.split(" ")[1];
 
+  if (!token) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
   if (
     Buffer.from(token, "base64").toString("utf-8") ===
     `${ADMIN_USERNAME}:${ADMIN_PASSWORD}`
