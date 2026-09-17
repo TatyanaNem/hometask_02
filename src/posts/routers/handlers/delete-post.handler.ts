@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { postsRepository } from "../../../repositories/posts-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
-import { createErrorMessages } from "../../../core/types/middlewares/input-validation-result.middleware";
+import { createErrorMessages } from "../../../core/middlewares/input-validation-result.middleware";
 
 export const deletePostHandler = (
   req: Request<{ postId: string }>,
