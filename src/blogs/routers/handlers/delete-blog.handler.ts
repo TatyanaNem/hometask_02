@@ -7,14 +7,14 @@ export const deleteBlogHandler = (
   req: Request<{ blogId: string }>,
   res: Response,
 ) => {
-  const blog = blogsRepository.getBlogById(req.params.blogId);
-  if (!blog) {
+  const isDeleted = blogsRepository.deleteBlog(req.params.blogId);
+
+  if (!isDeleted) {
     res
       .status(HttpStatus.NotFound)
       .send(createErrorMessages([{ field: "id", message: "Blog not found" }]));
     return;
   }
 
-  blogsRepository.deleteBlog(req.params.blogId);
   res.sendStatus(HttpStatus.NoContent);
 };

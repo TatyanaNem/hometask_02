@@ -19,21 +19,26 @@ export const blogsRepository = {
     inMemoryDB.blogs.push(createdBlog);
     return createdBlog;
   },
-  updateBlog(updateData: BlogInputDto, blogId: string) {
-    inMemoryDB.blogs = inMemoryDB.blogs.map((item: Blog) => {
-      if (item.id === parseInt(blogId)) {
-        return {
-          ...item,
-          ...updateData,
-        };
-      }
-      return item;
-    });
+  updateBlog(updateData: BlogInputDto, blogId: string): boolean {
+    const index = inMemoryDB.blogs.findIndex((d) => d.id === +blogId);
+
+    if (index === -1) {
+      return false;
+    }
+
+    // Обновляем поля, сохраняя служебные id и createdAt.
+    inMemoryDB.blogs[index] = { ...inMemoryDB.blogs[index], ...updateData };
+    return true;
   },
 
-  deleteBlog(blogId: string) {
-    inMemoryDB.blogs = inMemoryDB.blogs.filter(
-      (b) => b.id !== parseInt(blogId),
-    );
+  deleteBlog(blogId: string): boolean {
+    const index = inMemoryDB.blogs.findIndex((d) => d.id === +blogId);
+
+    if (index === -1) {
+      return false;
+    }
+
+    inMemoryDB.blogs.splice(index, 1);
+    return true;
   },
 };

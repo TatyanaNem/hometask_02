@@ -8,14 +8,14 @@ export const updateBlogHandler = (
   req: Request<{ blogId: string }, {}, BlogInputDto>,
   res: Response,
 ) => {
-  const blog = blogsRepository.getBlogById(req.params.blogId);
-  if (!blog) {
+  const isUpdated = blogsRepository.updateBlog(req.body, req.params.blogId);
+
+  if (!isUpdated) {
     res
       .status(HttpStatus.NotFound)
       .send(createErrorMessages([{ field: "id", message: "Blog not found" }]));
     return;
   }
 
-  blogsRepository.updateBlog(req.body, req.params.blogId);
   res.sendStatus(HttpStatus.NoContent);
 };
