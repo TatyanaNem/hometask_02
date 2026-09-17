@@ -1,4 +1,5 @@
 import { Blog } from "../blogs/types/blog";
+import { Post } from "../posts/types/post";
 
 export const inMemoryDB = {
   blogs: <Blog[]>[
@@ -21,5 +22,5 @@ export const inMemoryDB = {
       websiteUrl: "https://myblog3.com",
     },
   ],
-  posts: [],
+  posts: <Post[]>[],
 };

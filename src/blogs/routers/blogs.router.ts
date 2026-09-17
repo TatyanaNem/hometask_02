@@ -15,7 +15,7 @@ blogsRouter.get(BLOGS_ROUTES.ROOT, getBlogsListHandler);
 
 blogsRouter.get(
   BLOGS_ROUTES.BY_ID,
-  idValidation,
+  idValidation("blogId"),
   blogInputValidationResultMiddleware,
   getBlogHandler,
 );
@@ -29,7 +29,7 @@ blogsRouter.post(
 
 blogsRouter.put(
   BLOGS_ROUTES.BY_ID,
-  idValidation,
+  idValidation("blogId"),
   blogInputDtoValidation,
   blogInputValidationResultMiddleware,
   updateBlogHandler,
@@ -37,7 +37,7 @@ blogsRouter.put(
 
 blogsRouter.delete(
   BLOGS_ROUTES.BY_ID,
-  idValidation,
+  idValidation("blogId"),
   blogInputValidationResultMiddleware,
   deleteBlogHandler,
 );
