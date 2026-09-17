@@ -7,12 +7,12 @@ export const blogsRepository = {
     return inMemoryDB.blogs;
   },
   getBlogById(id: string) {
-    return inMemoryDB.blogs.find((b) => b.id === parseInt(id));
+    return inMemoryDB.blogs.find((b) => b.id === id);
   },
   createBlog(blog: BlogInputDto) {
     const lastBlog = inMemoryDB.blogs[inMemoryDB.blogs.length - 1];
     const createdBlog: Blog = {
-      id: lastBlog ? lastBlog.id + 1 : 1,
+      id: lastBlog ? (+lastBlog.id + 1).toString() : "1",
       ...blog,
     };
 
@@ -20,7 +20,7 @@ export const blogsRepository = {
     return createdBlog;
   },
   updateBlog(updateData: BlogInputDto, blogId: string): boolean {
-    const index = inMemoryDB.blogs.findIndex((d) => d.id === +blogId);
+    const index = inMemoryDB.blogs.findIndex((d) => d.id === blogId);
 
     if (index === -1) {
       return false;
@@ -32,7 +32,7 @@ export const blogsRepository = {
   },
 
   deleteBlog(blogId: string): boolean {
-    const index = inMemoryDB.blogs.findIndex((d) => d.id === +blogId);
+    const index = inMemoryDB.blogs.findIndex((d) => d.id === blogId);
 
     if (index === -1) {
       return false;
