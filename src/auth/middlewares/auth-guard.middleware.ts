@@ -20,10 +20,11 @@ export const authGuardMiddleware = (
     return;
   }
 
-  if (
-    Buffer.from(token, "base64").toString("utf-8") ===
-    `${ADMIN_USERNAME}:${ADMIN_PASSWORD}`
-  ) {
+  const encodedCredentials = Buffer.from(
+    `${ADMIN_USERNAME}:${ADMIN_PASSWORD}`,
+  ).toString("base64");
+
+  if (token === encodedCredentials) {
     next();
   } else {
     res.status(401).send("Unauthorized");
