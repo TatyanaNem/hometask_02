@@ -1,44 +1,35 @@
+import { ObjectId, WithId } from "mongodb";
 import { BlogInputDto } from "../blogs/dto/blog.input.dto";
 import { Blog } from "../blogs/types/blog";
-import { inMemoryDB } from "../db/in-memory.db";
+import { blogCollection } from "../db/collections";
 
 export const blogsRepository = {
-  getAllBlogs() {
-    return inMemoryDB.blogs;
+  async getAllBlogs(): Promise<WithId<Blog>[]> {
+    return blogCollection.find().toArray();
   },
-  getBlogById(id: string) {
-    return inMemoryDB.blogs.find((b) => b.id === id);
+  async getBlogById(id: string): Promise<WithId<Blog> | null> {
+    return blogCollection.findOne({ _id: new ObjectId(id) });
   },
-  createBlog(blog: BlogInputDto) {
-    const lastBlog = inMemoryDB.blogs[inMemoryDB.blogs.length - 1];
-    const createdBlog: Blog = {
-      id: lastBlog ? (+lastBlog.id + 1).toString() : "1",
+  async createBlog(blog: BlogInputDto): Promise<WithId<Blog>> {
+    const createdBlog = await blogCollection.insertOne(blog);
+    return {
+      _id: createdBlog.insertedId,
       ...blog,
     };
-
-    inMemoryDB.blogs.push(createdBlog);
-    return createdBlog;
   },
-  updateBlog(updateData: BlogInputDto, blogId: string): boolean {
-    const index = inMemoryDB.blogs.findIndex((d) => d.id === blogId);
+  async updateBlog(updateData: BlogInputDto, blogId: string): Promise<boolean> {
+    const result = await blogCollection.updateOne(
+      { _id: new ObjectId(blogId) },
+      { $set: updateData },
+    );
 
-    if (index === -1) {
-      return false;
-    }
-
-    // Обновляем поля, сохраняя служебные id и createdAt.
-    inMemoryDB.blogs[index] = { ...inMemoryDB.blogs[index], ...updateData };
-    return true;
+    return result.modifiedCount > 0;
   },
 
-  deleteBlog(blogId: string): boolean {
-    const index = inMemoryDB.blogs.findIndex((d) => d.id === blogId);
-
-    if (index === -1) {
-      return false;
-    }
-
-    inMemoryDB.blogs.splice(index, 1);
-    return true;
+  async deleteBlog(blogId: string): Promise<boolean> {
+    const result = await blogCollection.deleteOne({
+      _id: new ObjectId(blogId),
+    });
+    return result.deletedCount > 0;
   },
 };

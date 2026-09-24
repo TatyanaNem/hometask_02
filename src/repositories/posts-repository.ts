@@ -1,58 +1,32 @@
-import { PostInputDto } from "../posts/dto/post.input.dto";
 import { Post } from "../posts/types/post";
-import { inMemoryDB } from "../db/in-memory.db";
-import { blogsRepository } from "./blogs-repository";
+import { ObjectId, WithId } from "mongodb";
+import { postCollection } from "../db/collections";
 
 export const postsRepository = {
-  getAllPosts() {
-    return inMemoryDB.posts;
+  async getAllPosts(): Promise<WithId<Post>[]> {
+    return postCollection.find().toArray();
   },
-  getPostById(id: string) {
-    return inMemoryDB.posts.find((p) => p.id === id);
+  async getPostById(id: string): Promise<WithId<Post> | null> {
+    return postCollection.findOne({ _id: new ObjectId(id) });
   },
-  createPost(post: PostInputDto) {
-    const blog = blogsRepository.getBlogById(post.blogId);
-    const lastPost = inMemoryDB.posts[inMemoryDB.posts.length - 1];
-    const createdPost: Post = {
-      id: lastPost ? (+lastPost.id + 1).toString() : "1",
-      title: post.title,
-      shortDescription: post.shortDescription,
-      content: post.content,
-      blogId: post.blogId,
-      blogName: blog!.name,
-    };
-
-    inMemoryDB.posts.push(createdPost);
-    return createdPost;
+  async createPost(post: Post): Promise<WithId<Post>> {
+    const createdPost = await postCollection.insertOne(post);
+    return { ...post, _id: new ObjectId(createdPost.insertedId) };
   },
-  updatePost(updateData: PostInputDto, postId: string): boolean {
-    const index = inMemoryDB.posts.findIndex((p) => p.id === postId);
-
-    if (index === -1) {
-      return false;
-    }
-
-    const blog = blogsRepository.getBlogById(updateData.blogId);
-
-    inMemoryDB.posts[index] = {
-      ...inMemoryDB.posts[index],
-      title: updateData.title,
-      shortDescription: updateData.shortDescription,
-      content: updateData.content,
-      blogId: updateData.blogId,
-      blogName: blog!.name,
-    };
-    return true;
+  async updatePost(updateData: Post, postId: string): Promise<boolean> {
+    const result = await postCollection.updateOne(
+      {
+        _id: new ObjectId(postId),
+      },
+      { $set: updateData },
+    );
+    return result.matchedCount > 0;
   },
 
-  deletePost(postId: string): boolean {
-    const index = inMemoryDB.posts.findIndex((p) => p.id === postId);
-
-    if (index === -1) {
-      return false;
-    }
-
-    inMemoryDB.posts.splice(index, 1);
-    return true;
+  async deletePost(postId: string): Promise<boolean> {
+    const result = await postCollection.deleteOne({
+      _id: new ObjectId(postId),
+    });
+    return result.deletedCount > 0;
   },
 };
