@@ -2,6 +2,9 @@ import express from "express";
 import { setupApp } from "./setup-app";
 import { SETTINGS } from "./settings/config";
 import { runDB } from "./db/mongo.db";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const bootstrap = async () => {
   const app = express();
