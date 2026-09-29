@@ -7,14 +7,20 @@ export const deletePostHandler = (
   req: Request<{ postId: string }>,
   res: Response,
 ) => {
-  const isDeleted = postsRepository.deletePost(req.params.postId);
+  try {
+    const id = req.params.postId;
+    const isDeleted = postsRepository.deletePost(id);
 
-  if (!isDeleted) {
-    res
-      .status(HttpStatus.NotFound)
-      .send(createErrorMessages([{ field: "id", message: "Post not found" }]));
-    return;
+    if (!isDeleted) {
+      res
+        .status(HttpStatus.NotFound)
+        .send(
+          createErrorMessages([{ field: "id", message: "Post not found" }]),
+        );
+      return;
+    }
+    res.sendStatus(HttpStatus.NoContent);
+  } catch {
+    res.sendStatus(HttpStatus.InternalServerError);
   }
-
-  res.sendStatus(HttpStatus.NoContent);
 };

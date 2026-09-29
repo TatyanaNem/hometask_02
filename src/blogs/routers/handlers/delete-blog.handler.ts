@@ -3,18 +3,23 @@ import { blogsRepository } from "../../../repositories/blogs-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/middlewares/input-validation-result.middleware";
 
-export const deleteBlogHandler = (
+export async function deleteBlogHandler(
   req: Request<{ blogId: string }>,
   res: Response,
-) => {
-  const isDeleted = blogsRepository.deleteBlog(req.params.blogId);
-
-  if (!isDeleted) {
-    res
-      .status(HttpStatus.NotFound)
-      .send(createErrorMessages([{ field: "id", message: "Blog not found" }]));
-    return;
+) {
+  try {
+    const id = req.params.blogId;
+    const isDeleted = await blogsRepository.deleteBlog(id);
+    if (!isDeleted) {
+      res
+        .status(HttpStatus.NotFound)
+        .send(
+          createErrorMessages([{ field: "id", message: "Blog not found" }]),
+        );
+      return;
+    }
+    res.sendStatus(HttpStatus.NoContent);
+  } catch {
+    res.sendStatus(HttpStatus.InternalServerError);
   }
-
-  res.sendStatus(HttpStatus.NoContent);
-};
+}

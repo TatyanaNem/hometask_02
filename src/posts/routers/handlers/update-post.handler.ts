@@ -4,18 +4,27 @@ import { PostInputDto } from "../../dto/post.input.dto";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/middlewares/input-validation-result.middleware";
 
-export const updatePostHandler = (
+export async function updatePostHandler(
   req: Request<{ postId: string }, {}, PostInputDto>,
   res: Response,
-) => {
-  const isUpdated = postsRepository.updatePost(req.body, req.params.postId);
+) {
+  try {
+    const postTd = req.params.postId;
+    const post = await postsRepository.getPostById(postTd);
 
-  if (!isUpdated) {
-    res
-      .status(HttpStatus.NotFound)
-      .send(createErrorMessages([{ field: "id", message: "Post not found" }]));
+    if (!post) {
+      res
+        .status(HttpStatus.BadRequest)
+        .send(
+          createErrorMessages([{ field: "id", message: "Post not found" }]),
+        );
+      return;
+    }
+
+    await postsRepository.updatePost(post, postTd);
+    res.sendStatus(HttpStatus.NoContent);
+  } catch {
+    res.sendStatus(HttpStatus.InternalServerError);
     return;
   }
-
-  res.sendStatus(HttpStatus.NoContent);
-};
+}
