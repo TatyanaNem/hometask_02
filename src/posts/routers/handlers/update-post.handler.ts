@@ -16,7 +16,7 @@ export async function updatePostHandler(
 
     if (!post) {
       res
-        .status(HttpStatus.BadRequest)
+        .status(HttpStatus.NotFound)
         .send(
           createErrorMessages([{ field: "id", message: "Post not found" }]),
         );
