@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
-import { Blog } from "../../types/blog";
 import { blogsRepository } from "../../../repositories/blogs-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/middlewares/input-validation-result.middleware";
 import { ValidationErrorDto } from "../../../core/types/validation-error";
+import { BlogViewModel } from "../../types/blog-view-model";
+import { mapToBlogViewModel } from "../mappers/map-to-blog-view-model.util";
 
 export async function getBlogHandler(
   req: Request<{ blogId: string }>,
-  res: Response<Blog | ValidationErrorDto>,
+  res: Response<BlogViewModel | ValidationErrorDto>,
 ) {
   try {
     const blog = await blogsRepository.getBlogById(req.params.blogId);
@@ -19,7 +20,7 @@ export async function getBlogHandler(
         );
       return;
     }
-    res.status(HttpStatus.Ok).send(blog);
+    res.status(HttpStatus.Ok).send(mapToBlogViewModel(blog));
   } catch {
     res.sendStatus(HttpStatus.InternalServerError);
   }

@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
-import { Blog } from "../../types/blog";
 import { blogsRepository } from "../../../repositories/blogs-repository";
 import { HttpStatus } from "../../../core/types/http-statuses";
+import { BlogViewModel } from "../../types/blog-view-model";
+import { mapToBlogViewModel } from "../mappers/map-to-blog-view-model.util";
 
-export async function getBlogsListHandler(req: Request, res: Response<Blog[]>) {
+export async function getBlogsListHandler(req: Request, res: Response<BlogViewModel[]>) {
   try {
-    const blog = await blogsRepository.getAllBlogs();
-    if (!blog) {
-      res.sendStatus(HttpStatus.NotFound);
-      return;
-    }
-    res.status(HttpStatus.Ok).send(blog);
+    const blogs = await blogsRepository.getAllBlogs();
+    res.status(HttpStatus.Ok).send(blogs.map(mapToBlogViewModel));
   } catch {
     res.sendStatus(HttpStatus.InternalServerError);
   }
