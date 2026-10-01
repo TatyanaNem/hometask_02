@@ -11,10 +11,15 @@ export const blogsRepository = {
     return blogCollection.findOne({ _id: new ObjectId(id) });
   },
   async createBlog(blog: BlogInputDto): Promise<WithId<Blog>> {
-    const createdBlog = await blogCollection.insertOne(blog);
+    const newBlog: Blog = {
+      ...blog,
+      createdAt: new Date(),
+      isMembership: false,
+    };
+    const createdBlog = await blogCollection.insertOne(newBlog);
     return {
       _id: createdBlog.insertedId,
-      ...blog,
+      ...newBlog,
     };
   },
   async updateBlog(updateData: BlogInputDto, blogId: string): Promise<boolean> {
